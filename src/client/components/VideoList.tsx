@@ -13,6 +13,7 @@ interface VideoListProps {
   loading: boolean;
   selectedVideo: Video | null;
   onVideoSelect: (video: Video) => void;
+  onRefresh: () => void;
 }
 
 function formatFileSize(bytes: number): string {
@@ -39,12 +40,41 @@ const VideoList: React.FC<VideoListProps> = ({
   loading,
   selectedVideo,
   onVideoSelect,
+  onRefresh,
 }) => {
-  if (loading) {
+  if (loading && videos.length === 0) {
     return (
       <div className="video-list">
         <div className="video-list-header">
           <h2>Video Library</h2>
+          <div className="header-actions">
+            <span className="video-count">0 videos</span>
+            <button
+              className="refresh-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRefresh();
+              }}
+              title="刷新视频列表"
+              disabled={loading}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={loading ? 'spinning' : ''}
+              >
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="loading">Loading videos...</div>
       </div>
@@ -56,6 +86,34 @@ const VideoList: React.FC<VideoListProps> = ({
       <div className="video-list">
         <div className="video-list-header">
           <h2>Video Library</h2>
+          <div className="header-actions">
+            <span className="video-count">0 videos</span>
+            <button
+              className="refresh-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRefresh();
+              }}
+              title="刷新视频列表"
+              disabled={loading}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={loading ? 'spinning' : ''}
+              >
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="empty-state">
           <p>No videos found</p>
@@ -69,8 +127,40 @@ const VideoList: React.FC<VideoListProps> = ({
     <div className="video-list">
       <div className="video-list-header">
         <h2>Video Library</h2>
-        <span className="video-count">{videos.length} videos</span>
+        <div className="header-actions">
+          <span className="video-count">{videos.length} videos</span>
+          <button
+            className="refresh-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRefresh();
+            }}
+            title="刷新视频列表"
+            disabled={loading}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={loading ? 'spinning' : ''}
+            >
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
+        </div>
       </div>
+      {loading && videos.length > 0 && (
+        <div className="refreshing-indicator">
+          <span>正在刷新...</span>
+        </div>
+      )}
       <div className="video-items">
         {videos.map((video) => (
           <div

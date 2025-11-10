@@ -17,6 +17,12 @@
   align-items: center;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .video-list-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
@@ -25,6 +31,54 @@
 .video-count {
   font-size: 0.9rem;
   opacity: 0.9;
+}
+
+.refresh-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.refresh-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.refresh-button svg.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .video-items {
@@ -121,6 +175,15 @@
   color: #666;
 }
 
+.refreshing-indicator {
+  padding: 0.75rem 1.5rem;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  text-align: center;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+}
+
 .empty-state .hint {
   font-size: 0.9rem;
   color: #999;
@@ -144,6 +207,17 @@
 
   .video-count {
     font-size: 0.8rem;
+  }
+
+  .refresh-button {
+    width: 28px;
+    height: 28px;
+    padding: 0.4rem;
+  }
+
+  .refresh-button svg {
+    width: 14px;
+    height: 14px;
   }
 
   .video-items {

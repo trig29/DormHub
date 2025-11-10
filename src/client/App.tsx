@@ -19,8 +19,11 @@ function App() {
     fetchVideos();
   }, []);
 
-  const fetchVideos = async () => {
+  const fetchVideos = async (showLoading = false) => {
     try {
+      if (showLoading) {
+        setLoading(true);
+      }
       const response = await fetch('/api/videos');
       const data = await response.json();
       setVideos(data);
@@ -33,6 +36,10 @@ function App() {
 
   const handleVideoSelect = (video: Video) => {
     setSelectedVideo(video);
+  };
+
+  const handleRefresh = async () => {
+    await fetchVideos(true);
   };
 
   return (
@@ -48,6 +55,7 @@ function App() {
             loading={loading}
             selectedVideo={selectedVideo}
             onVideoSelect={handleVideoSelect}
+            onRefresh={handleRefresh}
           />
         </div>
         <div className="main-content">
