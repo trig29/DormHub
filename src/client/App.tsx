@@ -62,8 +62,8 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🎬 Dormhub</h1>
-        <p>Based on HLS Optimized Video Player</p>
+        <h1>DormHub</h1>
+        <p>男寝往事博览馆</p>
       </header>
       <div className="app-content">
         <div className="sidebar">
