@@ -1,9 +1,8 @@
-# Dockerfile for video streaming application
-# Use official Node.js image
-FROM node:18-slim
+# Dockerfile for video streaming application (China optimized)
+# Use Aliyun mirror for faster access in China
+FROM registry.cn-hangzhou.aliyuncs.com/acs/node:18-slim
 
 # Install FFmpeg and wget (for healthcheck)
-# Use apt mirror for faster downloads in China (optional)
 RUN apt-get update && \
     apt-get install -y ffmpeg wget && \
     rm -rf /var/lib/apt/lists/*
@@ -13,6 +12,9 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+# Use npm mirror for faster downloads in China
+RUN npm config set registry https://registry.npmmirror.com
 
 # Install all dependencies (needed for build)
 RUN npm ci && npm cache clean --force

@@ -4,6 +4,40 @@
 
 项目已完全支持使用 Docker 在服务器上部署，这是推荐的部署方式。
 
+## ⚠️ 如果遇到镜像拉取失败
+
+如果遇到 `node:18-slim: not found` 错误，请先配置 Docker 镜像加速器：
+
+```bash
+# 配置镜像加速器
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json > /dev/null <<EOF
+{
+  "registry-mirrors": [
+    "https://registry.cn-hangzhou.aliyuncs.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com"
+  ]
+}
+EOF
+
+# 重启 Docker
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
+# 验证配置
+docker info | grep -A 10 "Registry Mirrors"
+```
+
+或者使用国内优化版本：
+
+```bash
+# 使用国内优化的 Docker Compose 配置
+docker-compose -f docker-compose.cn.yml up -d --build
+```
+
+详细故障排查请查看: [DOCKER_TROUBLESHOOTING.md](./DOCKER_TROUBLESHOOTING.md)
+
 ## 🚀 快速开始
 
 ### 前置要求

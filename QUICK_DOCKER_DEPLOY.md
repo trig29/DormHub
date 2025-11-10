@@ -2,6 +2,26 @@
 
 ## 🚀 5分钟快速部署
 
+### 0. 配置 Docker 镜像加速器（重要！）
+
+如果在中国大陆，必须先配置镜像加速器，否则无法拉取镜像：
+
+```bash
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json > /dev/null <<EOF
+{
+  "registry-mirrors": [
+    "https://registry.cn-hangzhou.aliyuncs.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com"
+  ]
+}
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 ### 1. 安装 Docker（如果未安装）
 
 ```bash
@@ -36,7 +56,11 @@ mkdir -p videos
 ### 4. 一键启动
 
 ```bash
+# 标准方式
 docker-compose up -d --build
+
+# 如果标准方式失败，使用国内优化版本
+docker-compose -f docker-compose.cn.yml up -d --build
 ```
 
 ### 5. 配置防火墙
