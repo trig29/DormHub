@@ -5,6 +5,7 @@ module.exports = {
     script: './dist/server/index.js',
     instances: 1,
     exec_mode: 'fork',
+    cwd: process.cwd(),
     env: {
       NODE_ENV: 'production',
       PORT: 8000
