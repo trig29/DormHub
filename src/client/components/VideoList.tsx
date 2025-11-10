@@ -13,8 +13,6 @@ interface VideoListProps {
   loading: boolean;
   selectedVideo: Video | null;
   onVideoSelect: (video: Video) => void;
-  onConvert: (filename: string) => void;
-  converting: string | null;
 }
 
 function formatFileSize(bytes: number): string {
@@ -41,8 +39,6 @@ const VideoList: React.FC<VideoListProps> = ({
   loading,
   selectedVideo,
   onVideoSelect,
-  onConvert,
-  converting,
 }) => {
   if (loading) {
     return (
@@ -63,7 +59,7 @@ const VideoList: React.FC<VideoListProps> = ({
         </div>
         <div className="empty-state">
           <p>No videos found</p>
-          <p className="hint">Place video files in the 'videos' folder</p>
+          <p className="hint">Place HLS video folders in the 'hls' folder</p>
         </div>
       </div>
     );
@@ -94,18 +90,6 @@ const VideoList: React.FC<VideoListProps> = ({
               <span className="video-size">{formatFileSize(video.size)}</span>
               <span className="video-date">{formatDate(video.modified)}</span>
             </div>
-            {!video.hasHLS && (
-              <button
-                className="convert-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onConvert(video.filename);
-                }}
-                disabled={converting === video.filename}
-              >
-                {converting === video.filename ? 'Converting...' : 'Convert to HLS'}
-              </button>
-            )}
           </div>
         ))}
       </div>

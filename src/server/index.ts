@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
-import { getVideoList, convertToHLS, getHLSPlaylist } from './videoService.js';
+import { getVideoList, getHLSPlaylist } from './videoService.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -33,24 +33,12 @@ app.get('/api/videos', async (req, res) => {
   }
 });
 
-app.post('/api/videos/:filename/convert', async (req, res) => {
-  try {
-    const { filename } = req.params;
-    await convertToHLS(filename);
-    res.json({ message: 'Conversion started', filename });
-  } catch (error) {
-    console.error('Error converting video:', error);
-    res.status(500).json({ error: 'Failed to convert video' });
-  }
-});
-
 app.get('/api/videos/:filename/playlist', async (req, res) => {
   try {
     const { filename } = req.params;
     const playlistPath = await getHLSPlaylist(filename);
     if (playlistPath) {
-      const outputName = path.basename(filename, path.extname(filename));
-      res.json({ playlistUrl: `/hls/${outputName}/index.m3u8` });
+      res.json({ playlistUrl: `/hls/${filename}/index.m3u8` });
     } else {
       res.status(404).json({ error: 'HLS playlist not found' });
     }

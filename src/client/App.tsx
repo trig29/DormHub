@@ -14,7 +14,6 @@ function App() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [loading, setLoading] = useState(true);
-  const [converting, setConverting] = useState<string | null>(null);
 
   useEffect(() => {
     fetchVideos();
@@ -36,29 +35,6 @@ function App() {
     setSelectedVideo(video);
   };
 
-  const handleConvert = async (filename: string) => {
-    setConverting(filename);
-    try {
-      const response = await fetch(`/api/videos/${encodeURIComponent(filename)}/convert`, {
-        method: 'POST',
-      });
-      if (response.ok) {
-        // Poll for conversion completion
-        const checkInterval = setInterval(async () => {
-          await fetchVideos();
-          const video = videos.find(v => v.filename === filename);
-          if (video?.hasHLS) {
-            clearInterval(checkInterval);
-            setConverting(null);
-          }
-        }, 2000);
-      }
-    } catch (error) {
-      console.error('Error converting video:', error);
-      setConverting(null);
-    }
-  };
-
   return (
     <div className="app">
       <header className="app-header">
@@ -72,8 +48,6 @@ function App() {
             loading={loading}
             selectedVideo={selectedVideo}
             onVideoSelect={handleVideoSelect}
-            onConvert={handleConvert}
-            converting={converting}
           />
         </div>
         <div className="main-content">

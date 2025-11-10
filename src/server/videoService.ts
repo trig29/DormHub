@@ -2,117 +2,81 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import ffmpeg from 'fluent-ffmpeg';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Video directory - change this to your video folder path
-const VIDEO_DIR = path.join(__dirname, '../../videos');
+// HLS directory - contains pre-converted HLS videos
 const HLS_DIR = path.join(__dirname, '../../hls');
 
 // Ensure directories exist
 async function ensureDirectories() {
   try {
-    await fs.mkdir(VIDEO_DIR, { recursive: true });
     await fs.mkdir(HLS_DIR, { recursive: true });
   } catch (error) {
     console.error('Error creating directories:', error);
   }
 }
 
-// Get list of video files
+// Get list of HLS videos from hls folder
+// Each video should be in a subfolder with index.m3u8 file
 export async function getVideoList() {
   await ensureDirectories();
   
   try {
-    const files = await fs.readdir(VIDEO_DIR);
-    const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv', '.wmv'];
+    const entries = await fs.readdir(HLS_DIR, { withFileTypes: true });
     
     const videos = await Promise.all(
-      files
-        .filter(file => {
-          const ext = path.extname(file).toLowerCase();
-          return videoExtensions.includes(ext);
-        })
-        .map(async (file) => {
-          const filePath = path.join(VIDEO_DIR, file);
-          const stats = await fs.stat(filePath);
-          const outputName = path.basename(file, path.extname(file));
-          const hlsPath = path.join(HLS_DIR, outputName, 'index.m3u8');
+      entries
+        .filter(entry => entry.isDirectory())
+        .map(async (entry) => {
+          const videoDir = path.join(HLS_DIR, entry.name);
+          const playlistPath = path.join(videoDir, 'index.m3u8');
           
-          let hasHLS = false;
+          // Check if index.m3u8 exists
           try {
-            await fs.access(hlsPath);
-            hasHLS = true;
+            await fs.access(playlistPath);
+            
+            // Calculate total size of all segments
+            const files = await fs.readdir(videoDir);
+            let totalSize = 0;
+            let modifiedTime = new Date(0);
+            
+            for (const file of files) {
+              const filePath = path.join(videoDir, file);
+              const stats = await fs.stat(filePath);
+              totalSize += stats.size;
+              if (stats.mtime > modifiedTime) {
+                modifiedTime = stats.mtime;
+              }
+            }
+            
+            return {
+              filename: entry.name,
+              size: totalSize,
+              modified: modifiedTime,
+              hasHLS: true,
+            };
           } catch {
-            hasHLS = false;
+            // Skip directories without index.m3u8
+            return null;
           }
-          
-          return {
-            filename: file,
-            size: stats.size,
-            modified: stats.mtime,
-            hasHLS,
-          };
         })
     );
     
-    return videos;
+    // Filter out null entries
+    return videos.filter(video => video !== null);
   } catch (error) {
-    console.error('Error reading video directory:', error);
+    console.error('Error reading HLS directory:', error);
     throw error;
   }
 }
 
-// Convert video to HLS format
-export async function convertToHLS(filename: string): Promise<void> {
-  await ensureDirectories();
-  
-  const inputPath = path.join(VIDEO_DIR, filename);
-  const outputName = path.basename(filename, path.extname(filename));
-  const outputDir = path.join(HLS_DIR, outputName);
-  const outputPath = path.join(outputDir, 'index.m3u8');
-  
-  // Check if input file exists
-  try {
-    await fs.access(inputPath);
-  } catch {
-    throw new Error(`Video file not found: ${filename}`);
-  }
-  
-  // Create output directory
-  await fs.mkdir(outputDir, { recursive: true });
-  
-  return new Promise((resolve, reject) => {
-    ffmpeg(inputPath)
-      .outputOptions([
-        '-c:v libx264',
-        '-c:a aac',
-        '-hls_time 10',
-        '-hls_playlist_type vod',
-        '-hls_segment_filename', path.join(outputDir, 'segment_%03d.ts'),
-        '-f hls',
-      ])
-      .output(outputPath)
-      .on('end', () => {
-        console.log(`HLS conversion completed: ${filename}`);
-        resolve();
-      })
-      .on('error', (err) => {
-        console.error('FFmpeg error:', err);
-        reject(err);
-      })
-      .run();
-  });
-}
-
 // Get HLS playlist path if exists
-export async function getHLSPlaylist(filename: string): Promise<string | null> {
+export async function getHLSPlaylist(videoName: string): Promise<string | null> {
   await ensureDirectories();
   
-  const outputName = path.basename(filename, path.extname(filename));
-  const playlistPath = path.join(HLS_DIR, outputName, 'index.m3u8');
+  const playlistPath = path.join(HLS_DIR, videoName, 'index.m3u8');
   
   try {
     await fs.access(playlistPath);

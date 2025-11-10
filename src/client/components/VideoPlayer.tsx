@@ -26,17 +26,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
         setLoading(true);
         setError(null);
 
-        if (video.hasHLS) {
-          // Get HLS playlist URL
-          const response = await fetch(
-            `/api/videos/${encodeURIComponent(video.filename)}/playlist`
-          );
-          const data = await response.json();
-          setPlaylistUrl(data.playlistUrl);
-        } else {
-          // Fallback to direct video file (not recommended for large files)
-          setPlaylistUrl(`/api/videos/${encodeURIComponent(video.filename)}`);
-        }
+        // Get HLS playlist URL
+        const response = await fetch(
+          `/api/videos/${encodeURIComponent(video.filename)}/playlist`
+        );
+        const data = await response.json();
+        setPlaylistUrl(data.playlistUrl);
       } catch (err) {
         console.error('Error loading playlist:', err);
         setError('Failed to load video');
@@ -58,7 +53,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
       hlsRef.current = null;
     }
 
-    if (video.hasHLS && Hls.isSupported()) {
+    if (Hls.isSupported()) {
       // Use HLS.js for HLS playback
       const hls = new Hls({
         enableWorker: true,
@@ -97,14 +92,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
       });
 
       hlsRef.current = hls;
-    } else if (video.hasHLS && videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
       // Native HLS support (Safari)
-      videoElement.src = playlistUrl;
-      videoElement.addEventListener('loadedmetadata', () => {
-        setLoading(false);
-      });
-    } else if (!video.hasHLS) {
-      // Direct video file playback
       videoElement.src = playlistUrl;
       videoElement.addEventListener('loadedmetadata', () => {
         setLoading(false);
@@ -119,13 +108,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
         hlsRef.current = null;
       }
     };
-  }, [playlistUrl, video.hasHLS]);
+  }, [playlistUrl]);
 
   return (
     <div className="video-player-container">
       <div className="video-player-header">
         <h2>{video.filename}</h2>
-        {video.hasHLS && <span className="hls-indicator">HLS Optimized</span>}
+        <span className="hls-indicator">HLS</span>
       </div>
       <div className="video-wrapper">
         {loading && (
@@ -137,11 +126,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
         {error && (
           <div className="video-error">
             <p>{error}</p>
-            {!video.hasHLS && (
-              <p className="error-hint">
-                Convert this video to HLS for better playback experience
-              </p>
-            )}
           </div>
         )}
         <video
@@ -165,12 +149,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
             {new Date(video.modified).toLocaleString('zh-CN')}
           </span>
         </div>
-        {!video.hasHLS && (
-          <div className="info-warning">
-            ⚠️ This video is not optimized. Convert to HLS for better streaming
-            performance.
-          </div>
-        )}
       </div>
     </div>
   );
