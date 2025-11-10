@@ -11,6 +11,13 @@ README.md
 DEPLOYMENT.md
 WINDOWS_TEST.md
 QUICK_START.md
+DOCKER_DEPLOY.md
+VIRTUAL_ENV.md
+MOBILE_SUPPORT.md
 docker-compose*.yml
 Dockerfile*
+.dockerignore
+videos
+hls
+*.md
 

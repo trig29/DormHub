@@ -81,6 +81,7 @@ npm run start:prod
 ### Deployment
 
 For detailed deployment instructions, see:
+- **🐳 Docker Deployment (Recommended)**: [DOCKER_DEPLOY.md](./DOCKER_DEPLOY.md) - 最简单可靠的部署方式
 - **Windows Local Testing**: [WINDOWS_TEST.md](./WINDOWS_TEST.md)
 - **Cloud Server Deployment**: [DEPLOYMENT.md](./DEPLOYMENT.md)
 - **Virtual Environment (Docker)**: [VIRTUAL_ENV.md](./VIRTUAL_ENV.md)

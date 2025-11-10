@@ -68,6 +68,8 @@
 
 ## 云服务器部署（8000端口）
 
+> 💡 **推荐使用 Docker 部署**，更简单、更可靠。查看 [DOCKER_DEPLOY.md](./DOCKER_DEPLOY.md) 了解 Docker 部署方式。
+
 ### 服务器要求
 
 - Linux 服务器（Ubuntu 20.04+ 推荐）

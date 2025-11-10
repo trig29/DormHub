@@ -1,8 +1,10 @@
 # Dockerfile for video streaming application
 FROM node:18-slim
 
-# Install FFmpeg
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+# Install FFmpeg and wget (for healthcheck)
+RUN apt-get update && \
+    apt-get install -y ffmpeg wget && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -10,8 +12,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install all dependencies (needed for build)
+RUN npm ci && npm cache clean --force
 
 # Copy source code
 COPY . .
@@ -19,8 +21,19 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Create necessary directories
-RUN mkdir -p videos hls
+# Remove dev dependencies after build
+RUN npm prune --production && npm cache clean --force
+
+# Create necessary directories with proper permissions
+RUN mkdir -p videos hls && \
+    chmod 755 videos hls
+
+# Create non-root user (optional, for security)
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
 
 # Expose port
 EXPOSE 8000
@@ -28,6 +41,10 @@ EXPOSE 8000
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:8000/api/videos || exit 1
 
 # Start the application
 CMD ["npm", "run", "start:prod"]
