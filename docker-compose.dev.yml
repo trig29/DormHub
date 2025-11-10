@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  video-app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: dormhub-video-dev
+    ports:
+      - "3000:3000"  # Frontend dev server
+      - "5000:5000"  # Backend server
+    volumes:
+      # Mount source code for hot reload
+      - ./src:/app/src
+      - ./videos:/app/videos
+      - ./hls:/app/hls
+      # Exclude node_modules (use container's)
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    restart: unless-stopped
+    networks:
+      - video-network
+
+networks:
+  video-network:
+    driver: bridge
+

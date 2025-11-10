@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vite/
+*.log
+.env
+videos/
+hls/
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
+

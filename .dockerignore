@@ -1,0 +1,16 @@
+node_modules
+dist
+.vite
+.git
+.gitignore
+*.log
+.env
+.env.local
+.DS_Store
+README.md
+DEPLOYMENT.md
+WINDOWS_TEST.md
+QUICK_START.md
+docker-compose*.yml
+Dockerfile*
+
