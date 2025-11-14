@@ -3,6 +3,7 @@ dist/
 .vite/
 *.log
 logs/
+temp/
 .env
 videos/
 hls/

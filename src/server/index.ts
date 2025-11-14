@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
-import { getVideoList, getHLSPlaylist } from './videoService.js';
+import { getVideoList, getHLSPlaylist, convertHLSToMP4, cleanupTempFiles } from './videoService.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -47,6 +47,43 @@ app.get('/api/videos/:filename/playlist', async (req, res) => {
     res.status(500).json({ error: 'Failed to get playlist' });
   }
 });
+
+app.get('/api/videos/:filename/download', async (req, res) => {
+  try {
+    const { filename } = req.params;
+    
+    // Convert HLS to MP4
+    const mp4Path = await convertHLSToMP4(filename);
+    
+    // Ensure absolute path for sendFile
+    const absoluteMp4Path = path.resolve(mp4Path);
+    
+    // Set headers for file download
+    const mp4FileName = `${filename}.mp4`;
+    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(mp4FileName)}"`);
+    
+    // Send file
+    res.sendFile(absoluteMp4Path, (err) => {
+      if (err) {
+        console.error('Error sending file:', err);
+        if (!res.headersSent) {
+          res.status(500).json({ error: 'Failed to send file' });
+        }
+      }
+    });
+  } catch (error: any) {
+    console.error('Error downloading video:', error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: error.message || 'Failed to download video' });
+    }
+  }
+});
+
+// Cleanup temp files periodically (every hour)
+setInterval(() => {
+  cleanupTempFiles().catch(console.error);
+}, 60 * 60 * 1000);
 
 // Serve static files (production build only) - must be after API routes
 const clientDistPath = path.join(__dirname, '../client');

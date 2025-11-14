@@ -19,6 +19,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   const [playlistUrl, setPlaylistUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const loadPlaylist = async () => {
@@ -110,11 +111,86 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
     };
   }, [playlistUrl]);
 
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      const response = await fetch(
+        `/api/videos/${encodeURIComponent(video.filename)}/download`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Download failed');
+      }
+      
+      // Get the blob from response
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${video.filename}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error('Error downloading video:', err);
+      setError('下载失败，请稍后重试');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="video-player-container">
       <div className="video-player-header">
         <h2>{video.filename}</h2>
-        <span className="hls-indicator">HLS</span>
+        <div className="header-actions">
+          <span className="hls-indicator">HLS</span>
+          <button
+            className="download-button"
+            onClick={handleDownload}
+            disabled={downloading}
+            title="下载视频 (MP4)"
+          >
+            {downloading ? (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="spinning"
+              >
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            ) : (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            )}
+            <span>{downloading ? '转换中...' : '下载'}</span>
+          </button>
+        </div>
       </div>
       <div className="video-wrapper">
         {loading && (
