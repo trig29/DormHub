@@ -1,6 +1,9 @@
 # Dockerfile for video streaming application (China optimized)
 FROM node:18-slim
 
+# Switch to Tsinghua apt mirror for faster access in China
+RUN sed -i 's|deb.debian.org|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/debian.sources
+
 # Install FFmpeg and wget (for healthcheck)
 RUN apt-get update && \
     apt-get install -y ffmpeg wget && \
@@ -28,15 +31,12 @@ RUN npm run build
 RUN npm prune --production && npm cache clean --force
 
 # Create necessary directories with proper permissions
-RUN mkdir -p videos hls && \
-    chmod 755 videos hls
+RUN mkdir -p videos hls temp && \
+    chmod 755 videos hls temp
 
-# Create non-root user (optional, for security)
-RUN useradd -m -u 1000 appuser && \
-    chown -R appuser:appuser /app
-
-# Switch to non-root user
-USER appuser
+# Switch to non-root user (node user already exists with UID 1000)
+RUN chown -R node:node /app
+USER node
 
 # Expose port
 EXPOSE 8000

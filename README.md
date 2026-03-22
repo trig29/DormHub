@@ -125,8 +125,8 @@ npm run pm2:delete    # 删除进程
 # 标准构建 & 启动
 npm run docker:prod:build
 
-# 国内服务器 (使用阿里云镜像加速)
-docker-compose -f docker-compose.cn.yml up -d --build
+# 国内服务器 (使用清华 apt 源 + npmmirror 加速)
+docker compose -f docker-compose.cn.yml up -d --build
 
 # 查看日志
 npm run docker:logs
@@ -135,7 +135,7 @@ npm run docker:logs
 npm run docker:down
 ```
 
-Docker 会自动挂载 `./videos` 和 `./hls` 目录到容器中。
+Docker 会自动挂载 `./videos` 和 `./hls` 目录到容器中，`temp` 目录由容器内部管理无需挂载。
 
 ### 添加视频
 
