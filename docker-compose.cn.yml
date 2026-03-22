@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   video-app:
     build: 
@@ -13,6 +11,8 @@ services:
       - ./videos:/app/videos
       # Mount HLS output directory
       - ./hls:/app/hls
+      # Mount temp directory for MP4 conversion cache
+      - ./temp:/app/temp
     environment:
       - NODE_ENV=production
       - PORT=8000
