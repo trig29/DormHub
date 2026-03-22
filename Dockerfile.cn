@@ -1,6 +1,5 @@
 # Dockerfile for video streaming application (China optimized)
-# Use Aliyun mirror for faster access in China
-FROM registry.cn-hangzhou.aliyuncs.com/acs/node:18-slim
+FROM node:18-slim
 
 # Install FFmpeg and wget (for healthcheck)
 RUN apt-get update && \
