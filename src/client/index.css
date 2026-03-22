@@ -6,7 +6,6 @@
 }
 
 html {
-  /* Prevent text size adjustment on iOS */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -17,30 +16,20 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0f0f0f;
+  color: #e8e8e8;
   min-height: 100vh;
-  /* Prevent pull-to-refresh on mobile */
   overscroll-behavior-y: contain;
-  /* Better scrolling on mobile */
   -webkit-overflow-scrolling: touch;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
 
 #root {
   min-height: 100vh;
-  /* Prevent horizontal scroll on mobile */
   overflow-x: hidden;
 }
 
-/* Mobile-specific optimizations */
 @media (max-width: 480px) {
   body {
-    /* Prevent zoom on input focus */
     touch-action: manipulation;
   }
 }
-

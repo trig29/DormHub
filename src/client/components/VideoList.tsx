@@ -46,7 +46,7 @@ const VideoList: React.FC<VideoListProps> = ({
     return (
       <div className="video-list">
         <div className="video-list-header">
-          <h2>Video Library</h2>
+          <h2>视频库</h2>
           <div className="header-actions">
             <span className="video-count">0 videos</span>
             <button
@@ -76,7 +76,7 @@ const VideoList: React.FC<VideoListProps> = ({
             </button>
           </div>
         </div>
-        <div className="loading">Loading videos...</div>
+        <div className="loading">加载中...</div>
       </div>
     );
   }
@@ -85,7 +85,7 @@ const VideoList: React.FC<VideoListProps> = ({
     return (
       <div className="video-list">
         <div className="video-list-header">
-          <h2>Video Library</h2>
+          <h2>视频库</h2>
           <div className="header-actions">
             <span className="video-count">0 videos</span>
             <button
@@ -116,8 +116,8 @@ const VideoList: React.FC<VideoListProps> = ({
           </div>
         </div>
         <div className="empty-state">
-          <p>No videos found</p>
-          <p className="hint">Place HLS video folders in the 'hls' folder</p>
+          <p>暂无视频</p>
+          <p className="hint">将 HLS 视频文件夹放入 hls 目录</p>
         </div>
       </div>
     );
@@ -126,7 +126,7 @@ const VideoList: React.FC<VideoListProps> = ({
   return (
     <div className="video-list">
       <div className="video-list-header">
-        <h2>Video Library</h2>
+        <h2>视频库</h2>
         <div className="header-actions">
           <span className="video-count">{videos.length} videos</span>
           <button

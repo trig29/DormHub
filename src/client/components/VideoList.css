@@ -1,17 +1,12 @@
 .video-list {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 200px);
+  height: calc(100vh - 52px);
 }
 
 .video-list-header {
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,52 +15,48 @@
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .video-list-header h2 {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
+  color: #e8e8e8;
 }
 
 .video-count {
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.8rem;
+  color: #666;
 }
 
 .refresh-button {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  border-radius: 6px;
-  padding: 0.5rem;
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  border-radius: 4px;
+  padding: 0.4rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  width: 32px;
-  height: 32px;
+  transition: color 0.15s, border-color 0.15s;
+  width: 28px;
+  height: 28px;
 }
 
 .refresh-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.05);
-}
-
-.refresh-button:active:not(:disabled) {
-  transform: scale(0.95);
+  color: #e8e8e8;
+  border-color: #555;
 }
 
 .refresh-button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .refresh-button svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 .refresh-button svg.spinning {
@@ -73,53 +64,45 @@
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .video-items {
   overflow-y: auto;
   flex: 1;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .video-item {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 2px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  transition: background 0.15s;
 }
 
 .video-item:hover {
-  border-color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+  background: #222;
 }
 
 .video-item.selected {
-  border-color: #667eea;
-  background: #f0f4ff;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  background: #222;
+  border-left-color: #f90;
 }
 
 .video-item-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .video-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e8e8e8;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -128,43 +111,45 @@
 }
 
 .hls-badge {
-  background: #10b981;
-  color: white;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  background: #333;
+  color: #888;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
   font-weight: 600;
   flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .video-item-info {
   display: flex;
   justify-content: space-between;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #666;
-  margin-bottom: 0.5rem;
 }
 
 .convert-button {
   width: 100%;
   padding: 0.5rem;
-  background: #667eea;
+  background: #f90;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: opacity 0.15s;
   margin-top: 0.5rem;
 }
 
 .convert-button:hover:not(:disabled) {
-  background: #5568d3;
+  opacity: 0.85;
 }
 
 .convert-button:disabled {
-  background: #ccc;
+  background: #333;
+  color: #666;
   cursor: not-allowed;
 }
 
@@ -176,105 +161,61 @@
 }
 
 .refreshing-indicator {
-  padding: 0.75rem 1.5rem;
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  padding: 0.5rem 1rem;
+  color: #888;
   text-align: center;
-  font-size: 0.9rem;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+  font-size: 0.8rem;
+  border-bottom: 1px solid #222;
 }
 
 .empty-state .hint {
-  font-size: 0.9rem;
-  color: #999;
+  font-size: 0.85rem;
+  color: #555;
   margin-top: 0.5rem;
 }
 
-/* Mobile optimizations */
 @media (max-width: 768px) {
   .video-list {
+    height: auto;
     max-height: none;
-    border-radius: 8px;
   }
 
   .video-list-header {
-    padding: 1rem;
-  }
-
-  .video-list-header h2 {
-    font-size: 1.2rem;
-  }
-
-  .video-count {
-    font-size: 0.8rem;
-  }
-
-  .refresh-button {
-    width: 28px;
-    height: 28px;
-    padding: 0.4rem;
-  }
-
-  .refresh-button svg {
-    width: 14px;
-    height: 14px;
+    padding: 0.75rem 1rem;
   }
 
   .video-items {
-    padding: 0.75rem;
+    padding: 0.5rem;
     max-height: 60vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .video-item {
-    padding: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .video-title {
-    font-size: 0.9rem;
+    padding: 0.6rem 0.75rem;
   }
 
   .video-item-info {
-    font-size: 0.8rem;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.15rem;
   }
 
   .convert-button {
-    padding: 0.75rem;
-    font-size: 0.85rem;
-    min-height: 44px; /* Better touch target */
+    padding: 0.6rem;
+    min-height: 44px;
   }
 }
 
 @media (max-width: 480px) {
   .video-list-header {
-    padding: 0.75rem;
-  }
-
-  .video-list-header h2 {
-    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .video-items {
-    padding: 0.5rem;
     max-height: 50vh;
   }
 
   .video-item {
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .video-title {
-    font-size: 0.85rem;
-  }
-
-  .hls-badge {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.4rem;
+    padding: 0.5rem 0.6rem;
   }
 }
-

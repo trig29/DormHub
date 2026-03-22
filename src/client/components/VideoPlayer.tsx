@@ -196,7 +196,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
         {loading && (
           <div className="video-loading">
             <div className="spinner"></div>
-            <p>Loading video...</p>
+            <p>加载中...</p>
           </div>
         )}
         {error && (
@@ -214,13 +214,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
       </div>
       <div className="video-info">
         <div className="info-item">
-          <span className="info-label">File Size:</span>
+          <span className="info-label">大小</span>
           <span className="info-value">
             {(video.size / (1024 * 1024)).toFixed(2)} MB
           </span>
         </div>
         <div className="info-item">
-          <span className="info-label">Modified:</span>
+          <span className="info-label">修改时间</span>
           <span className="info-value">
             {new Date(video.modified).toLocaleString('zh-CN')}
           </span>

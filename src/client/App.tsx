@@ -45,7 +45,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>DormHub</h1>
+        <h1><span className="logo-dorm">Dorm</span><span className="logo-hub">Hub</span></h1>
         <p>男寝往事博览馆</p>
       </header>
       <div className="app-content">
@@ -63,8 +63,8 @@ function App() {
             <VideoPlayer video={selectedVideo} />
           ) : (
             <div className="placeholder">
-              <h2>Select a video to start playing</h2>
-              <p>Choose a video from the list on the left</p>
+              <h2>选择一个视频开始播放</h2>
+              <p>从左侧列表中选择</p>
             </div>
           )}
         </div>
