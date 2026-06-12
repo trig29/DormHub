@@ -174,6 +174,8 @@ server {
 }
 ```
 
+如果应用部署在 `/dormhub/` 这类子路径下，构建前需要设置 `VITE_BASE_PATH=/dormhub/`，这样前端生成的静态资源、API 请求和 HLS 播放地址都会带上正确前缀。`deploy.sh` 和 `Dockerfile` 已经默认处理了这一点。
+
 ## 环境变量
 
 | 变量 | 默认值 | 说明 |

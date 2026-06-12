@@ -20,6 +20,9 @@ RUN npm ci && npm cache clean --force
 # Copy source code
 COPY . .
 
+# Build the client for the /dormhub subpath deployment.
+ENV VITE_BASE_PATH=/dormhub/
+
 # Build the application
 RUN npm run build
 

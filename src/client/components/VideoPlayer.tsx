@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
+import { withBasePath } from '../utils/paths';
 import './VideoPlayer.css';
 
 interface Video {
@@ -29,10 +30,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
 
         // Get HLS playlist URL
         const response = await fetch(
-          `/api/videos/${encodeURIComponent(video.filename)}/playlist`
+          withBasePath(`api/videos/${encodeURIComponent(video.filename)}/playlist`)
         );
         const data = await response.json();
-        setPlaylistUrl(data.playlistUrl);
+        setPlaylistUrl(withBasePath(data.playlistUrl));
       } catch (err) {
         console.error('Error loading playlist:', err);
         setError('Failed to load video');
@@ -115,7 +116,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
     try {
       setDownloading(true);
       const response = await fetch(
-        `/api/videos/${encodeURIComponent(video.filename)}/download`
+        withBasePath(`api/videos/${encodeURIComponent(video.filename)}/download`)
       );
       
       if (!response.ok) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VideoList from './components/VideoList';
 import VideoPlayer from './components/VideoPlayer';
+import { withBasePath } from './utils/paths';
 import './App.css';
 
 interface Video {
@@ -24,7 +25,7 @@ function App() {
       if (showLoading) {
         setLoading(true);
       }
-      const response = await fetch('/api/videos');
+      const response = await fetch(withBasePath('api/videos'));
       const data = await response.json();
       setVideos(data);
     } catch (error) {

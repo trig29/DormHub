@@ -23,6 +23,7 @@ npm install
 
 # Build project
 echo "Building project..."
+export VITE_BASE_PATH=/dormhub/
 npm run build
 
 # Create necessary directories
