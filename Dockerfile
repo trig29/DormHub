@@ -34,7 +34,7 @@ RUN mkdir -p videos hls && \
     chmod 755 videos hls
 
 # Create non-root user (optional, for security)
-RUN useradd -m -u 1000 appuser && \
+RUN useradd -m appuser && \
     chown -R appuser:appuser /app
 
 # Switch to non-root user
